@@ -7,8 +7,8 @@ function! storage#is_storage_path(path) abort
 endfunction
 
 function! storage#has_cmd(cmd) abort
-  let script = 'which ' . a:cmd
-  let result = system(script)
+  let script = 'type ' . a:cmd
+  call system(script)
   if !v:shell_error
     return 'true'
   else
@@ -16,8 +16,17 @@ function! storage#has_cmd(cmd) abort
   endif
 endfunction
 
-function! storage#get_cmd(path) abort
+function! storage#get_cmd(cmd, bucket, file) abort
+  let script = a:cmd . 'get ' . a:bucket . ' ' . a:file
+  " TODO: shell_error > 0
+  call system(script)
+  " TODO: if match(a:file, '/') == 0, then a:file
+  return $PWD . a:file
 endfunction
 
-function! storage#put_cmd(path) abort
+function! storage#put_cmd(cmd, file, bucket) abort
+  " TODO: shell_error > 0
+  let script = a:cmd . 'put ' . a:file . ' ' . a:bucket
+  call system(script)
+  return $PWD . a:file
 endfunction

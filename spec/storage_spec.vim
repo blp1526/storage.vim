@@ -24,7 +24,7 @@ call Spec_storage_is_storage_path()
 function! Spec_storage_has_cmd() abort
   echo 'storage#has_cmd'
   echo repeat(' ', 2).'when has cmd'
-  let cmd = 's3cmd'
+  let cmd = 'type'
   let expected = 'true'
   let actual = storage#has_cmd(cmd)
   echo repeat(' ', 4).'should return true'
