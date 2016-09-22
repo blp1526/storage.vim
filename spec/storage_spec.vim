@@ -2,8 +2,16 @@ source $PWD/autoload/storage.vim
 
 let v:errors = []
 
+function! Spec_storage_get() abort
+  echo 'storage#get'
+  echo repeat(' ', 2) . 'should return tempname()'
+  let expected = '### pending ###'
+  let actual = storage#get()
+  call assert_equal(expected, actual)
+endfunction
+
 function! Spec_storage_is_storage_path() abort
-  echo 'storage#is_storage_path'
+  echo 'storage#is_storage_path()'
   echo repeat(' ', 2).'when path begins s3://'
   let path = 's3://foo/README.md'
   let expected = 'true'
@@ -19,10 +27,9 @@ function! Spec_storage_is_storage_path() abort
   call assert_equal(expected, actual)
 endfunction
 
-call Spec_storage_is_storage_path()
 
 function! Spec_storage_has_cmd() abort
-  echo 'storage#has_cmd'
+  echo 'storage#has_cmd()'
   echo repeat(' ', 2).'when has cmd'
   let cmd = 'type'
   let expected = 'true'
@@ -38,6 +45,8 @@ function! Spec_storage_has_cmd() abort
   call assert_equal(expected, actual)
 endfunction
 
+" call Spec_storage_get()
+call Spec_storage_is_storage_path()
 call Spec_storage_has_cmd()
 
 echo "\n".len(v:errors).' failed'

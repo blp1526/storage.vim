@@ -1,3 +1,10 @@
+function! storage#get() abort
+  let tmpfile = tempname()
+endfunction
+
+function! storage#put() abort
+endfunction
+
 function! storage#is_storage_path(path) abort
   if match(a:path, 's3://') == 0
     return 'true'
