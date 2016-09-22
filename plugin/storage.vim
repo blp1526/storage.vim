@@ -12,7 +12,7 @@ endif
 
 augroup storage
   autocmd!
-  " autocmd BufNewFile,BufRead s3://* call storage#get()
+  autocmd BufNewFile,BufRead s3://* call storage#get()
   " autocmd BufWritePre s3://* call storage#put()
 augroup END
 
