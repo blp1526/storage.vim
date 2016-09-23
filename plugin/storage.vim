@@ -8,6 +8,7 @@ set cpo&vim
 
 if !exists('g:storage_vim_cmd')
   let g:storage_vim_cmd = 's3cmd'
+  let g:storage_vim_files = {}
 endif
 
 augroup storage
