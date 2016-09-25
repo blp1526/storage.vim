@@ -13,8 +13,8 @@ endif
 
 augroup storage
   autocmd!
-  autocmd BufNewFile,BufRead s3://* call storage#get()
-  " autocmd BufWritePre s3://* call storage#put()
+  autocmd BufReadCmd,FileReadCmd s3://* call storage#get(@%)
+  " autocmd BufWriteCmd,FileWriteCmd s3://* call storage#put()
 augroup END
 
 let &cpo = s:save_cpo
