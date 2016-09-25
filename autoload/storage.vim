@@ -1,6 +1,7 @@
-function! storage#get(path) abort
-  let l:tempfile = tempname()
-  echo l:tempfile
+function! storage#get(path, dict) abort
+  let tmpfile = tempname()
+  let a:dict[tmpfile] = a:path
+  echo a:dict[tmpfile]
 endfunction
 
 function! storage#put() abort

@@ -8,12 +8,12 @@ set cpo&vim
 
 if !exists('g:storage_vim_cmd')
   let g:storage_vim_cmd = 's3cmd'
-  let g:storage_vim_files = {}
+  let g:storage_vim_dict = {}
 endif
 
 augroup storage
   autocmd!
-  autocmd BufReadCmd,FileReadCmd s3://* call storage#get(@%)
+  autocmd BufReadCmd,FileReadCmd s3://* call storage#get(@%, g:storage_vim_dict)
   " autocmd BufWriteCmd,FileWriteCmd s3://* call storage#put()
 augroup END
 
