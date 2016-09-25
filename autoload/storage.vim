@@ -1,5 +1,6 @@
-function! storage#get() abort
-  let tmpfile = tempname()
+function! storage#get(path) abort
+  let l:tempfile = tempname()
+  echo l:tempfile
 endfunction
 
 function! storage#put() abort
