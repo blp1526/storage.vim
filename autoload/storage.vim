@@ -1,7 +1,7 @@
 function! storage#get(path, dict) abort
   let tmpfile = tempname()
   let a:dict[tmpfile] = a:path
-  echo a:dict[tmpfile]
+  execute 'edit' fnameescape(tmpfile)
 endfunction
 
 function! storage#put() abort
