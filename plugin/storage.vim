@@ -13,7 +13,7 @@ endif
 
 augroup storage
   autocmd!
-  " autocmd BufReadCmd,FileReadCmd s3://* call storage#get(g:storage_vim_cmd,   @%, g:storage_vim_dict)
+  autocmd BufReadCmd,FileReadCmd s3://* call storage#read(g:storage_vim_cmd, @%, g:storage_vim_dict)
   " autocmd BufWriteCmd,FileWriteCmd s3://* call storage#put(g:storage_vim_cmd, @%, g:storage_vim_dict)
 augroup END
 
