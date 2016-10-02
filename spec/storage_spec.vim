@@ -27,7 +27,6 @@ function! Spec_storage_is_storage_path() abort
   call assert_equal(expected, actual)
 endfunction
 
-
 function! Spec_storage_has_cmd() abort
   echo 'storage#has_cmd()'
   echo repeat(' ', 2).'when has cmd'
@@ -47,10 +46,20 @@ endfunction
 
 function! Spec_storage_extension() abort
   echo 'storage#current_file_extension()'
-  echo repeat(' ', 2).'when  storage_spec.vim'
+  echo repeat(' ', 2).'when current file is storage_spec.vim'
   let expected = 'vim'
-  let actual = storage#current_extension()
+  let actual = storage#current_file_extension()
   echo repeat(' ', 4).'should return vim'
+  call assert_equal(expected, actual)
+endfunction
+
+function! Spec_storage_buffer_s3_path() abort
+  echo 'storage#buffer_s3_path()'
+  echo repeat(' ', 2).'when path is s3://foo.rb'
+  let path = 's3://foo.rb'
+  let expected = 's3:/foo.rb'
+  let actual = storage#buffer_s3_path(path)
+  echo repeat(' ', 4).'should return s3:/foo.rb'
   call assert_equal(expected, actual)
 endfunction
 
@@ -58,6 +67,7 @@ endfunction
 call Spec_storage_is_storage_path()
 call Spec_storage_has_cmd()
 call Spec_storage_extension()
+call Spec_storage_buffer_s3_path()
 
 echo "\n".len(v:errors).' failed'
 if !empty(v:errors)

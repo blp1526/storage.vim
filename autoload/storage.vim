@@ -1,10 +1,13 @@
-function! storage#get(path, dict) abort
-  let tmpfile = tempname()
-  let a:dict[tmpfile] = a:path
-  execute 'edit' fnameescape(tmpfile)
+function! storage#read(cmd, path, dict) abort
+  let tempfile = tempname()
+  " let a:dict[tmpfile] = a:path
+  let extension = storage#current_file_extension()
+  let tempfile  = tempfile . '.' . extension
+  execute 'edit' fnameescape(tempfile)
+  echo a:path
 endfunction
 
-function! storage#put() abort
+function! storage#write() abort
 endfunction
 
 function! storage#is_storage_path(path) abort
@@ -23,6 +26,11 @@ function! storage#has_cmd(cmd) abort
   else
     return 'false'
   endif
+endfunction
+
+function! storage#buffer_s3_path(s3_path) abort
+  let path = substitute(a:s3_path, 's3://', '', '')
+  return 's3:/' . path
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
