@@ -39,3 +39,7 @@ function! storage#put_cmd(cmd, file, bucket) abort
   call system(script)
   return $PWD . a:file
 endfunction
+
+function! storage#current_file_extension() abort
+  return expand('%:e')
+endfunction
