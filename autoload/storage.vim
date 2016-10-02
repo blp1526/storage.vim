@@ -3,8 +3,9 @@ function! storage#read(cmd, path, dict) abort
   " let a:dict[tmpfile] = a:path
   let extension = storage#current_file_extension()
   let tempfile  = tempfile . '.' . extension
+  call storage#get_cmd(a:cmd, a:path, tempfile)
   execute 'edit' fnameescape(tempfile)
-  echo a:path
+  execute 'bdelete' fnameescape(a:path)
 endfunction
 
 function! storage#write() abort
@@ -34,18 +35,19 @@ function! storage#buffer_s3_path(s3_path) abort
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
-  let script = a:cmd . 'get ' . a:bucket . ' ' . a:file
-  " TODO: shell_error > 0
+  let script = a:cmd . ' get ' . a:bucket . ' ' . a:file
   call system(script)
-  " TODO: if match(a:file, '/') == 0, then a:file
-  return $PWD . a:file
+  if v:shell_error != 0
+  " TODO:
+  endif
 endfunction
 
 function! storage#put_cmd(cmd, file, bucket) abort
-  " TODO: shell_error > 0
-  let script = a:cmd . 'put ' . a:file . ' ' . a:bucket
+  let script = a:cmd . ' put ' . a:file . ' ' . a:bucket
   call system(script)
-  return $PWD . a:file
+  if v:shell_error != 0
+  " TODO:
+  endif
 endfunction
 
 function! storage#current_file_extension() abort
