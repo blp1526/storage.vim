@@ -45,9 +45,19 @@ function! Spec_storage_has_cmd() abort
   call assert_equal(expected, actual)
 endfunction
 
+function! Spec_storage_extension() abort
+  echo 'storage#current_file_extension()'
+  echo repeat(' ', 2).'when  storage_spec.vim'
+  let expected = 'vim'
+  let actual = storage#current_extension()
+  echo repeat(' ', 4).'should return vim'
+  call assert_equal(expected, actual)
+endfunction
+
 " call Spec_storage_get()
 call Spec_storage_is_storage_path()
 call Spec_storage_has_cmd()
+call Spec_storage_extension()
 
 echo "\n".len(v:errors).' failed'
 if !empty(v:errors)
