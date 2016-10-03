@@ -11,14 +11,6 @@ endfunction
 function! storage#write() abort
 endfunction
 
-function! storage#is_storage_path(path) abort
-  if match(a:path, 's3://') == 0
-    return 'true'
-  else
-    return 'false'
-  endif
-endfunction
-
 function! storage#has_cmd(cmd) abort
   let script = 'type ' . a:cmd
   call system(script)
@@ -27,11 +19,6 @@ function! storage#has_cmd(cmd) abort
   else
     return 'false'
   endif
-endfunction
-
-function! storage#buffer_s3_path(s3_path) abort
-  let path = substitute(a:s3_path, 's3://', '', '')
-  return 's3:/' . path
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort

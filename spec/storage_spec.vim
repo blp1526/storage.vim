@@ -10,23 +10,6 @@ function! Spec_storage_get() abort
   call assert_equal(expected, actual)
 endfunction
 
-function! Spec_storage_is_storage_path() abort
-  echo 'storage#is_storage_path()'
-  echo repeat(' ', 2).'when path begins s3://'
-  let path = 's3://foo/README.md'
-  let expected = 'true'
-  let actual = storage#is_storage_path(path)
-  echo repeat(' ', 4).'should return true'
-  call assert_equal(expected, actual)
-
-  echo repeat(' ', 2).'when path does not begin s3://'
-  let path = '/tmp/README.md'
-  let expected = 'false'
-  let actual = storage#is_storage_path(path)
-  echo repeat(' ', 4).'should return false'
-  call assert_equal(expected, actual)
-endfunction
-
 function! Spec_storage_has_cmd() abort
   echo 'storage#has_cmd()'
   echo repeat(' ', 2).'when has cmd'
@@ -53,21 +36,9 @@ function! Spec_storage_extension() abort
   call assert_equal(expected, actual)
 endfunction
 
-function! Spec_storage_buffer_s3_path() abort
-  echo 'storage#buffer_s3_path()'
-  echo repeat(' ', 2).'when path is s3://foo.rb'
-  let path = 's3://foo.rb'
-  let expected = 's3:/foo.rb'
-  let actual = storage#buffer_s3_path(path)
-  echo repeat(' ', 4).'should return s3:/foo.rb'
-  call assert_equal(expected, actual)
-endfunction
-
 " call Spec_storage_get()
-call Spec_storage_is_storage_path()
 call Spec_storage_has_cmd()
 call Spec_storage_extension()
-call Spec_storage_buffer_s3_path()
 
 echo "\n".len(v:errors).' failed'
 if !empty(v:errors)
