@@ -1,8 +1,8 @@
 function! storage#read(cmd, path, dict) abort
-  let tempfile = tempname()
-  " let a:dict[tmpfile] = a:path
   let extension = storage#current_file_extension()
+  let tempfile = tempname()
   let tempfile  = tempfile . '.' . extension
+  let a:dict[tempfile] = a:path
   call storage#get_cmd(a:cmd, a:path, tempfile)
   execute 'edit' fnameescape(tempfile)
   execute 'bdelete' fnameescape(a:path)
