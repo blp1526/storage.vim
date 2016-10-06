@@ -5,7 +5,11 @@ function! storage#read(cmd, path, dict) abort
   let a:dict[tempfile] = a:path
   call storage#get_cmd(a:cmd, a:path, tempfile)
   execute 'edit' fnameescape(tempfile)
-  execute 'bdelete' fnameescape(a:path)
+  execute '%yank'
+  execute 'edit' fnameescape(a:path)
+  execute 'put'
+  execute 'filetype detect'
+  " execute 'bdelete' fnameescape(a:path)
 endfunction
 
 function! storage#write() abort
