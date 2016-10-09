@@ -6,6 +6,10 @@
 $ vim s3://BUCKET/OBJECT
 ```
 
+## Requirement
+
+The `s3cmd` cli tool, or a same `get` and `put` interfafce cli tool.
+
 ## Contributing
 
 1. Fork it ( https://github.com/blp1526/storage.vim/fork )
