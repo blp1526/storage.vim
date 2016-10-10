@@ -2,17 +2,30 @@ function! storage#read(cmd, path, dict) abort
   let extension = storage#current_file_extension()
   let tempfile = tempname()
   let tempfile  = tempfile . '.' . extension
-  let a:dict[tempfile] = a:path
+  let a:dict[a:path] = tempfile
   call storage#get_cmd(a:cmd, a:path, tempfile)
   execute 'edit' fnameescape(tempfile)
+  " FIXME:
   execute '%yank'
+  " normal! 'gg"*yG'
   execute 'edit' fnameescape(a:path)
   execute 'put'
   execute 'filetype detect'
   " execute 'bdelete' fnameescape(a:path)
 endfunction
 
-function! storage#write() abort
+function! storage#write(cmd, dict, path) abort
+  " TODO:
+  let tempfile = a:dict[a:path]
+  set hidden
+  execute 'edit' tempfile
+  execute '%d'
+  execute 'edit' a:path
+  execute '%yank'
+  execute 'edit' tempfile
+  execute 'put'
+  execute 'write'
+  " call storage#put_cmd(a:cmd, a:dict, a:path)
 endfunction
 
 function! storage#has_cmd(cmd) abort
