@@ -15,6 +15,7 @@ augroup storage
   autocmd!
   autocmd BufReadCmd,FileReadCmd   s3://* call storage#read(g:storage_vim_cmd, @%, g:storage_vim_dict)
   autocmd BufWriteCmd,FileWriteCmd s3://* call storage#write(g:storage_vim_cmd, g:storage_vim_dict, @%)
+  autocmd QuitPre                  s3://* execute 'quit!'
 augroup END
 
 let &cpo = s:save_cpo
