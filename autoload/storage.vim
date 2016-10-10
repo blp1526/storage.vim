@@ -1,7 +1,6 @@
 function! storage#read(cmd, path, dict) abort
   let extension = storage#current_file_extension()
-  let tempfile = tempname()
-  let tempfile  = tempfile . '.' . extension
+  let tempfile  = tempname() . '.' . extension
   let a:dict[a:path] = tempfile
   call storage#get_cmd(a:cmd, a:path, tempfile)
   execute 'edit' fnameescape(tempfile)
@@ -25,7 +24,8 @@ function! storage#write(cmd, dict, path) abort
   execute 'edit' tempfile
   execute 'put'
   execute 'write'
-  " call storage#put_cmd(a:cmd, a:dict, a:path)
+  call storage#put_cmd(a:cmd, tempfile, a:path)
+  execute 'edit' a:path
 endfunction
 
 function! storage#has_cmd(cmd) abort
