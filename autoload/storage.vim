@@ -4,17 +4,14 @@ function! storage#read(cmd, path, dict) abort
   let a:dict[a:path] = tempfile
   call storage#get_cmd(a:cmd, a:path, tempfile)
   execute 'edit' fnameescape(tempfile)
-  " FIXME:
   execute '%yank'
-  " normal! 'gg"*yG'
   execute 'edit' fnameescape(a:path)
   execute 'put'
+  execute 'normal ggdd'
   execute 'filetype detect'
-  " execute 'bdelete' fnameescape(a:path)
 endfunction
 
 function! storage#write(cmd, dict, path) abort
-  " TODO:
   let tempfile = a:dict[a:path]
   set hidden
   execute 'edit' tempfile
@@ -23,19 +20,10 @@ function! storage#write(cmd, dict, path) abort
   execute '%yank'
   execute 'edit' tempfile
   execute 'put'
+  execute 'normal ggdd'
   execute 'write'
   call storage#put_cmd(a:cmd, tempfile, a:path)
   execute 'edit' a:path
-endfunction
-
-function! storage#has_cmd(cmd) abort
-  let script = 'type ' . a:cmd
-  call system(script)
-  if !v:shell_error
-    return 'true'
-  else
-    return 'false'
-  endif
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
