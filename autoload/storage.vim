@@ -13,6 +13,7 @@ endfunction
 
 function! storage#write(cmd, dict, path) abort
   let tempfile = a:dict[a:path]
+  let current_hidden = &hidden
   set hidden
   execute 'edit' tempfile
   execute '%d'
@@ -24,6 +25,7 @@ function! storage#write(cmd, dict, path) abort
   execute 'write'
   call storage#put_cmd(a:cmd, tempfile, a:path)
   execute 'edit' a:path
+  let &hidden = current_hidden
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
