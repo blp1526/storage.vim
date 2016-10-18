@@ -8,6 +8,9 @@ set cpo&vim
 
 if !exists('g:storage_vim_cmd')
   let g:storage_vim_cmd = 's3cmd'
+endif
+
+if !exists('g:storage_vim_dict')
   let g:storage_vim_dict = {}
 endif
 
