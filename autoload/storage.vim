@@ -25,6 +25,7 @@ function! storage#write(cmd, dict, path) abort
   execute 'write'
   call storage#put_cmd(a:cmd, tempfile, a:path)
   execute 'edit' a:path
+  setlocal nomodified
   let &hidden = current_hidden
 endfunction
 
