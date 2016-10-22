@@ -45,6 +45,15 @@ function! storage#put_cmd(cmd, file, bucket) abort
   endif
 endfunction
 
+function! storage#ls_cmd(cmd, bucket) abort
+  let script = a:cmd . ' ls ' . a:bucket
+  let ls_result = system(script)
+  return ls_result
+  " if v:shell_error != 0
+  " " TODO:
+  " endif
+endfunction
+
 function! storage#current_file_extension() abort
   return expand('%:e')
 endfunction
