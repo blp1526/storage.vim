@@ -14,14 +14,21 @@ function! storage#read(cmd, path, dict) abort
     execute 'normal ggdd'
     execute 'filetype detect'
   else
-    " let current_errorformat = &errorformat
-    " let &errorformat = '%f'
-    " let ls_result = storage#ls_cmd(a:cmd, a:path)
-    " cexpr ls_result
-    " copen
-    " let &errorformat = current_errorformat
-    echo 'Sorry, readdir is not implemented yet.'
+    let current_errorformat = &errorformat
+    let &errorformat = '%f'
+    let ls_result = storage#ls_cmd(a:cmd, a:path)
+    let ls_result_array = split(ls_result, "\n")
+    call map(ls_result_array, 'storage#last_word(v:val)')
+    cexpr join(ls_result_array, "\n")
+    copen
+    let &errorformat = current_errorformat
   endif
+endfunction
+
+function! storage#last_word(val) abort
+  let array = split(a:val)
+  let index = len(array) - 1
+  return array[index]
 endfunction
 
 function! storage#write(cmd, dict, path) abort
@@ -44,26 +51,20 @@ endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
   let script = a:cmd . ' get ' . a:bucket . ' ' . a:file
+  " FIXME: error handling
   call system(script)
-  if v:shell_error != 0
-  " TODO:
-  endif
 endfunction
 
 function! storage#put_cmd(cmd, file, bucket) abort
   let script = a:cmd . ' put ' . a:file . ' ' . a:bucket
+  " FIXME: error handling
   call system(script)
-  if v:shell_error != 0
-  " TODO:
-  endif
 endfunction
 
 function! storage#ls_cmd(cmd, bucket) abort
   let script = a:cmd . ' ls ' . a:bucket
+  " FIXME: error handling
   return system(script)
-  " if v:shell_error != 0
-  " " TODO:
-  " endif
 endfunction
 
 function! storage#current_file_extension() abort
