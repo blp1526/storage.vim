@@ -1,14 +1,21 @@
 function! storage#read(cmd, path, dict) abort
-  let extension = storage#current_file_extension()
-  let tempfile  = tempname() . '.' . extension
-  let a:dict[a:path] = tempfile
-  call storage#get_cmd(a:cmd, a:path, tempfile)
-  execute 'edit' fnameescape(tempfile)
-  execute '%yank'
-  execute 'edit' fnameescape(a:path)
-  execute 'put'
-  execute 'normal ggdd'
-  execute 'filetype detect'
+  let last_index_of_path = strchars(a:path) - 1
+  let last_string_of_path = a:path[last_index_of_path]
+
+  if (last_string_of_path !=? '/')
+    let extension = storage#current_file_extension()
+    let tempfile  = tempname() . '.' . extension
+    let a:dict[a:path] = tempfile
+    call storage#get_cmd(a:cmd, a:path, tempfile)
+    execute 'edit' fnameescape(tempfile)
+    execute '%yank'
+    execute 'edit' fnameescape(a:path)
+    execute 'put'
+    execute 'normal ggdd'
+    execute 'filetype detect'
+  else
+    echo 'Sorry, readdir is not implemented yet.'
+  endif
 endfunction
 
 function! storage#write(cmd, dict, path) abort
