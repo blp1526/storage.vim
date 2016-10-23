@@ -14,6 +14,12 @@ function! storage#read(cmd, path, dict) abort
     execute 'normal ggdd'
     execute 'filetype detect'
   else
+    " let current_errorformat = &errorformat
+    " let &errorformat = '%f'
+    " let ls_result = storage#ls_cmd(a:cmd, a:path)
+    " cexpr ls_result
+    " copen
+    " let &errorformat = current_errorformat
     echo 'Sorry, readdir is not implemented yet.'
   endif
 endfunction
@@ -22,11 +28,11 @@ function! storage#write(cmd, dict, path) abort
   let tempfile = a:dict[a:path]
   let current_hidden = &hidden
   set hidden
-  execute 'edit' tempfile
+  execute 'edit' fnameescape(tempfile)
   execute '%d'
-  execute 'edit' a:path
+  execute 'edit' fnameescape(a:path)
   execute '%yank'
-  execute 'edit' tempfile
+  execute 'edit' fnameescape(tempfile)
   execute 'put'
   execute 'normal ggdd'
   execute 'write'
@@ -54,8 +60,7 @@ endfunction
 
 function! storage#ls_cmd(cmd, bucket) abort
   let script = a:cmd . ' ls ' . a:bucket
-  let ls_result = system(script)
-  return ls_result
+  return system(script)
   " if v:shell_error != 0
   " " TODO:
   " endif
