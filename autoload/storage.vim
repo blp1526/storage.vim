@@ -4,9 +4,10 @@ function! storage#read(cmd, path, dict) abort
 
   try
     if (last_string_of_path !=? '/')
-      let extension = storage#current_file_extension()
-      let tempfile  = tempname() . '.' . extension
-      let a:dict[a:path] = tempfile
+      if (!has_key(a:dict, a:path))
+        let tempfile  = tempname() . '.' . storage#current_file_extension()
+        let a:dict[a:path] = tempfile
+      endif
       call storage#get_cmd(a:cmd, a:path, tempfile)
       execute 'edit' fnameescape(tempfile)
       execute '%yank'
