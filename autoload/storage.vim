@@ -14,10 +14,11 @@ function! storage#read(cmd, path, dict) abort
       execute 'filetype detect'
     else
       let current_errorformat = &errorformat
-      let &errorformat = '%f'
+      let &errorformat = storage#errorformat()
       let ls_result = storage#ls_cmd(a:cmd, a:path)
+      " FIXME: add header
       let ls_result_array = split(ls_result, "\n")
-      call map(ls_result_array, 'storage#last_word(v:val)')
+      call map(ls_result_array, 'storage#errorformatted_string(v:val)')
       cexpr join(ls_result_array, "\n")
       copen
       let &errorformat = current_errorformat
@@ -26,15 +27,22 @@ function! storage#read(cmd, path, dict) abort
   endtry
 endfunction
 
+function! storage#errorformat() abort
+  " FIXME: more readable
+  return '%f'
+endfunction
+
 function! storage#last_string(str) abort
   let last_index = strchars(a:str) - 1
   return a:str[last_index]
 endfunction
 
-function! storage#last_word(val) abort
+function! storage#errorformatted_string(val) abort
   let array = split(a:val)
-  let index = len(array) - 1
-  return array[index]
+  let path_pos = len(array) - 1
+  let stat_pos = len(array) - 2
+  " FIXME: more readable
+  return array[path_pos]
 endfunction
 
 function! storage#write(cmd, dict, path) abort
