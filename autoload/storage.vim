@@ -1,9 +1,6 @@
 function! storage#read(cmd, path, dict) abort
-  let last_index_of_path = strchars(a:path) - 1
-  let last_string_of_path = a:path[last_index_of_path]
-
   try
-    if (last_string_of_path !=? '/')
+    if (storage#last_string(a:path) !=? '/')
       if (!has_key(a:dict, a:path))
         let tempfile  = tempname() . '.' . storage#current_file_extension()
         let a:dict[a:path] = tempfile
@@ -27,6 +24,11 @@ function! storage#read(cmd, path, dict) abort
     endif
   catch
   endtry
+endfunction
+
+function! storage#last_string(str) abort
+  let last_index = strchars(a:str) - 1
+  return a:str[last_index]
 endfunction
 
 function! storage#last_word(val) abort
@@ -58,29 +60,21 @@ endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
   let script = a:cmd . ' get ' . a:bucket . ' ' . a:file
-  let result =  system(script)
-  if v:shell_error == 0
-    return result
-  else
-    echo result
-    throw 'Bad Exit Status Error'
-  endif
+  return storage#run_cmd(script)
 endfunction
 
 function! storage#put_cmd(cmd, file, bucket) abort
   let script = a:cmd . ' put ' . a:file . ' ' . a:bucket
-  let result =  system(script)
-  if v:shell_error == 0
-    return result
-  else
-    echo result
-    throw 'Bad Exit Status Error'
-  endif
+  return storage#run_cmd(script)
 endfunction
 
 function! storage#ls_cmd(cmd, bucket) abort
   let script = a:cmd . ' ls ' . a:bucket
-  let result =  system(script)
+  return storage#run_cmd(script)
+endfunction
+
+function! storage#run_cmd(script) abort
+  let result =  system(a:script)
   if v:shell_error == 0
     return result
   else
