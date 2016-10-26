@@ -19,7 +19,7 @@ function! storage#read(cmd, path, dict) abort
       " FIXME: add header
       let ls_result_array = split(ls_result, "\n")
       call map(ls_result_array, 'storage#errorformatted_string(v:val)')
-      cexpr join(ls_result_array, "\n")
+      cgete join(ls_result_array, "\n")
       copen
       let &errorformat = current_errorformat
     endif
