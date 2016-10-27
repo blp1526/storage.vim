@@ -16,10 +16,11 @@ function! storage#read(cmd, path, dict) abort
       let current_errorformat = &errorformat
       let &errorformat = storage#errorformat()
       let ls_result = storage#ls_cmd(a:cmd, a:path)
-      " FIXME: add header
       let ls_result_array = split(ls_result, "\n")
       call map(ls_result_array, 'storage#errorformatted_string(v:val)')
       cgete join(ls_result_array, "\n")
+      " FIXME: find better way
+      setlocal nomodified
       copen
       let &errorformat = current_errorformat
     endif
