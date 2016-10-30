@@ -11,7 +11,16 @@ function! Spec_storage_extension() abort
   call assert_equal(expected, actual)
 endfunction
 
+function! Spec_storage_cmd_script() abort
+  echo 'storage#cmd_script()'
+  let expected = 'ls -al /tmp'
+  let actual = storage#cmd_script('ls', '-al', '/tmp')
+  echo repeat(' ', 2).'should return string joined by space'
+  call assert_equal(expected, actual)
+endfunction
+
 call Spec_storage_extension()
+call Spec_storage_cmd_script()
 
 echo "\n".len(v:errors).' failed'
 if !empty(v:errors)
