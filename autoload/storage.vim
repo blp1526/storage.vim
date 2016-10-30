@@ -67,18 +67,22 @@ function! storage#write(cmd, dict, path) abort
   let &hidden = current_hidden
 endfunction
 
+function! storage#cmd_script(...) abort
+  return join(a:000, ' ')
+endfunction
+
 function! storage#get_cmd(cmd, bucket, file) abort
-  let script = a:cmd . ' get ' . a:bucket . ' ' . a:file
+  let script = storage#cmd_script(a:cmd, 'get', a:bucket, a:file)
   return storage#run_cmd(script)
 endfunction
 
 function! storage#put_cmd(cmd, file, bucket) abort
-  let script = a:cmd . ' put ' . a:file . ' ' . a:bucket
+  let script = storage#cmd_script(a:cmd, 'put', a:file, a:bucket)
   return storage#run_cmd(script)
 endfunction
 
 function! storage#ls_cmd(cmd, bucket) abort
-  let script = a:cmd . ' ls ' . a:bucket
+  let script = storage#cmd_script(a:cmd, 'ls', a:bucket)
   return storage#run_cmd(script)
 endfunction
 
