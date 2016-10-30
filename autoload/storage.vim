@@ -29,8 +29,7 @@ function! storage#read(cmd, path, dict) abort
 endfunction
 
 function! storage#errorformat() abort
-  " FIXME: more readable
-  return '%f'
+  return '%f(%l\,%c):%m'
 endfunction
 
 function! storage#last_string(str) abort
@@ -40,10 +39,10 @@ endfunction
 
 function! storage#errorformatted_string(val) abort
   let array = split(a:val)
-  let path_pos = len(array) - 1
-  let stat_pos = len(array) - 2
-  " FIXME: more readable
-  return array[path_pos]
+  let file        = array[(len(array) - 1)]
+  let line_column = '(1,1):'
+  let message     = array[(len(array) - 2)]
+  return (file . line_column . message)
 endfunction
 
 function! storage#write(cmd, dict, path) abort
