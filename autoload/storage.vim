@@ -6,12 +6,12 @@ function! storage#read(cmd, path, dict) abort
         let a:dict[a:path] = tempfile
       endif
       call storage#get_cmd(a:cmd, a:path, tempfile)
-      execute 'edit' fnameescape(tempfile)
-      execute '%yank'
-      execute 'edit' fnameescape(a:path)
-      execute 'put'
-      execute 'normal ggdd'
-      execute 'filetype detect'
+      silent execute 'edit' fnameescape(tempfile)
+      silent execute '%yank'
+      silent execute 'edit' fnameescape(a:path)
+      silent execute 'put'
+      silent execute 'normal ggdd'
+      silent execute 'filetype detect'
     else
       let current_errorformat = &errorformat
       let &errorformat = storage#errorformat()
@@ -49,19 +49,21 @@ function! storage#write(cmd, dict, path) abort
   let tempfile = a:dict[a:path]
   let current_hidden = &hidden
   set hidden
-  execute 'edit' fnameescape(tempfile)
-  execute '%d'
-  execute 'edit' fnameescape(a:path)
-  execute '%yank'
-  execute 'edit' fnameescape(tempfile)
-  execute 'put'
-  execute 'normal ggdd'
-  execute 'write'
+  silent execute 'edit' fnameescape(tempfile)
+  silent execute '%d'
+  silent execute 'edit' fnameescape(a:path)
+  silent execute '%yank'
+  silent execute 'edit' fnameescape(tempfile)
+  silent execute 'put'
+  silent execute 'normal ggdd'
+  silent execute 'write'
   try
-    call storage#put_cmd(a:cmd, tempfile, a:path)
+    echo storage#put_cmd(a:cmd, tempfile, a:path)
   catch
+  finally
+    silent execute 'edit' fnameescape(a:path)
   endtry
-  execute 'edit' a:path
+  " expected to be still 'modified' if storage#put_cmd failed
   setlocal nomodified
   let &hidden = current_hidden
 endfunction
@@ -77,7 +79,8 @@ endfunction
 
 function! storage#put_cmd(cmd, file, bucket) abort
   let script = storage#cmd_script(a:cmd, 'put', a:file, a:bucket)
-  return storage#run_cmd(script)
+  call storage#run_cmd(script)
+  return '"' . a:bucket . '" ' . 'uploaded'
 endfunction
 
 function! storage#ls_cmd(cmd, bucket) abort
