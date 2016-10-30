@@ -28,13 +28,13 @@ function! storage#read(cmd, path, dict) abort
   endtry
 endfunction
 
-function! storage#errorformat() abort
-  return '%f(%l\,%c):%m'
-endfunction
-
 function! storage#last_string(str) abort
   let last_index = strchars(a:str) - 1
   return a:str[last_index]
+endfunction
+
+function! storage#errorformat() abort
+  return '%f(%l\,%c):%m'
 endfunction
 
 function! storage#errorformatted_string(val) abort
