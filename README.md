@@ -8,7 +8,7 @@ $ vim s3://BUCKET/OBJECT
 
 ## Requirement
 
-The `s3cmd` cli tool, or a same `get` and `put` interfafce cli tool.
+The `s3cmd` cli tool, or a same `get`, `put` and `ls` interfafce cli tool.
 
 ## Contributing
 
