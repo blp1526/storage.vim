@@ -68,6 +68,10 @@ function! storage#write(cmd, dict, path) abort
   let &hidden = current_hidden
 endfunction
 
+function! storage#current_line_string() abort
+  return getline('.')
+endfunction
+
 function! storage#cmd_script(...) abort
   return join(a:000, ' ')
 endfunction
