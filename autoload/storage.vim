@@ -13,39 +13,12 @@ function! storage#read(cmd, path, dict) abort
       silent execute 'normal ggdd'
       silent execute 'filetype detect'
     else
-      let current_errorformat = &errorformat
-      let &errorformat = storage#errorformat()
-      let ls_result = storage#ls_cmd(a:cmd, a:path)
-      let ls_result_array = split(ls_result, "\n")
-      call map(ls_result_array, 'storage#errorformatted_string(v:val)')
       setlocal nomodified
-      call storage#open_quickfix(ls_result_array)
-      let &errorformat = current_errorformat
+      let ls_result = storage#ls_cmd(a:cmd, a:path)
+      call storage#open_quickfix(ls_result)
     endif
   catch
   endtry
-endfunction
-
-function! storage#open_quickfix(array) abort
-      cgete join(a:array, "\n")
-      copen
-endfunction
-
-function! storage#last_string(str) abort
-  let last_index = strchars(a:str) - 1
-  return a:str[last_index]
-endfunction
-
-function! storage#errorformat() abort
-  return '%f(%l\,%c):%m'
-endfunction
-
-function! storage#errorformatted_string(val) abort
-  let array = split(a:val)
-  let file        = array[(len(array) - 1)]
-  let line_column = '(1,1):'
-  let message     = array[(len(array) - 2)]
-  return (file . line_column . message)
 endfunction
 
 function! storage#write(cmd, dict, path) abort
@@ -69,6 +42,33 @@ function! storage#write(cmd, dict, path) abort
   " expected to be still 'modified' if storage#put_cmd failed
   setlocal nomodified
   let &hidden = current_hidden
+endfunction
+
+function! storage#open_quickfix(ls_result) abort
+  let current_errorformat = &errorformat
+  let &errorformat = storage#errorformat()
+  let ls_result_array = split(a:ls_result, "\n")
+  call map(ls_result_array, 'storage#errorformatted_string(v:val)')
+  cgete join(ls_result_array, "\n")
+  copen
+  let &errorformat = current_errorformat
+endfunction
+
+function! storage#last_string(str) abort
+  let last_index = strchars(a:str) - 1
+  return a:str[last_index]
+endfunction
+
+function! storage#errorformat() abort
+  return '%f(%l\,%c):%m'
+endfunction
+
+function! storage#errorformatted_string(val) abort
+  let array = split(a:val)
+  let file        = array[(len(array) - 1)]
+  let line_column = '(1,1):'
+  let message     = array[(len(array) - 2)]
+  return (file . line_column . message)
 endfunction
 
 function! storage#current_line_string() abort
