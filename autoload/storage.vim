@@ -39,7 +39,8 @@ function! storage#write(cmd, dict, path) abort
   finally
     silent execute 'edit' fnameescape(a:path)
   endtry
-  " expected to be still 'modified' if storage#put_cmd failed
+  " NOTE:
+  " Expected to be still 'modified' if storage#put_cmd failed
   setlocal nomodified
   let &hidden = current_hidden
 endfunction
@@ -49,9 +50,27 @@ function! storage#open_quickfix(ls_result) abort
   let &errorformat = storage#errorformat()
   let ls_result_array = split(a:ls_result, "\n")
   call map(ls_result_array, 'storage#errorformatted_string(v:val)')
-  cgete join(ls_result_array, "\n")
+  cgetexpr join(ls_result_array, "\n")
   copen
+  try
+    " NOTE:
+    " This 'colder' is required to prevent from throwing 'E925 Current quickfix was changed' error.
+    " Because above 'cgetexpr' creates new quickfix, and current quickfix is changed.
+    " See http://github.com/vim/vim/blob/0a9046fbcb33770517ab0220b8100c4494bddab2/src/quickfix.c#L2275-L2276
+    colder
+    let g:storage_vim_required_cnewer = 1
+  catch
+    echo ''
+  endtry
   let &errorformat = current_errorformat
+endfunction
+
+function! storage#cnewer() abort
+  if g:storage_vim_required_cnewer == 1
+    cnewer
+    let g:storage_vim_required_cnewer = 0
+    echo ''
+  endif
 endfunction
 
 function! storage#last_string(str) abort
