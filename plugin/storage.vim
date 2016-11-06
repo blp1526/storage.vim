@@ -14,9 +14,14 @@ if !exists('g:storage_vim_dict')
   let g:storage_vim_dict = {}
 endif
 
+if !exists('g:storage_vim_required_cnewer')
+  let g:storage_vim_required_cnewer = 0
+endif
+
 augroup storage
   autocmd!
   autocmd BufReadCmd,FileReadCmd   s3://* call storage#read(g:storage_vim_cmd, @%, g:storage_vim_dict)
+  autocmd TextChanged              *      call storage#cnewer()
   autocmd BufWriteCmd,FileWriteCmd s3://* call storage#write(g:storage_vim_cmd, g:storage_vim_dict, @%)
 augroup END
 
