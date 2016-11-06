@@ -57,19 +57,17 @@ function! storage#open_quickfix(ls_result) abort
     " This 'colder' is required to prevent from throwing 'E925 Current quickfix was changed' error.
     " Because above 'cgetexpr' creates new quickfix, and current quickfix is changed.
     " See http://github.com/vim/vim/blob/0a9046fbcb33770517ab0220b8100c4494bddab2/src/quickfix.c#L2275-L2276
-    colder
+    silent colder
     let g:storage_vim_required_cnewer = 1
   catch
-    echo ''
   endtry
   let &errorformat = current_errorformat
 endfunction
 
 function! storage#cnewer() abort
   if g:storage_vim_required_cnewer == 1
-    cnewer
+    silent cnewer
     let g:storage_vim_required_cnewer = 0
-    echo ''
   endif
 endfunction
 
