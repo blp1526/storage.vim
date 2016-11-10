@@ -6,6 +6,14 @@
 $ vim s3://BUCKET/OBJECT
 ```
 
+This executes `s3cmd get s3://BUCKET/OBJECT tempfile`, and shows the result as a new buffer.
+
+```markdown
+$ vim s3://BUCKET/OBJECT/
+```
+
+This executes `s3cmd ls s3://BUCKET/OBJECT/`, and shows the result as a quickfix window.
+
 ## Requirement
 
 The `s3cmd` cli tool, or a same `get`, `put` and `ls` interfafce cli tool.
