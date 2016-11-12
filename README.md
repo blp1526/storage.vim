@@ -23,6 +23,25 @@ This executes `s3cmd ls s3://BUCKET/OBJECT/`, and shows the result as a quickfix
 
 The `s3cmd` cli tool, or a same `get`, `put` and `ls` interfafce cli tool.
 
+## Installation
+
+Use your favorite plugin manager, or
+
+```markdown
+# at terminal
+$ git clone https://github.com/blp1526/storage.vim.git ~/.vim/bundle/storage.vim
+```
+
+```markdown
+# at .vimrc
+set runtimepath^=~/.vim/bundle/storage.vim
+```
+
+```markdown
+# at Vim
+:helptags ~/.vim/bundle/storage.vim/doc
+```
+
 ## Contributing
 
 1. Fork it ( https://github.com/blp1526/storage.vim/fork )
