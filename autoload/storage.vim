@@ -50,7 +50,9 @@ function! storage#open_quickfix(ls_result) abort
   let &errorformat = storage#errorformat()
   let ls_result_array = split(a:ls_result, "\n")
   call map(ls_result_array, 'storage#errorformatted_string(v:val)')
-  cgetexpr join(ls_result_array, "\n")
+  let storage_vim_ls_list = join(ls_result_array, "\n")
+  " FIXME: more beautify
+  cgetexpr storage_vim_ls_list
   copen
   try
     " NOTE:
