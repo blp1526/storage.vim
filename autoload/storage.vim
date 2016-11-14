@@ -8,6 +8,7 @@ function! storage#read(cmd, path, dict) abort
       call storage#get_cmd(a:cmd, a:path, tempfile)
       silent execute 'edit' fnameescape(tempfile)
       silent execute '%yank'
+      setlocal nobuflisted
       silent execute 'edit' fnameescape(a:path)
       silent execute 'put'
       silent execute 'normal ggdd'
@@ -33,6 +34,7 @@ function! storage#write(cmd, dict, path) abort
   silent execute 'put'
   silent execute 'normal ggdd'
   silent execute 'write'
+  setlocal nobuflisted
   try
     echo storage#put_cmd(a:cmd, tempfile, a:path)
   catch
