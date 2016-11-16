@@ -21,7 +21,7 @@ This executes `s3cmd ls s3://BUCKET/OBJECT/`, and shows the result as a quickfix
 
 ## Requirement
 
-The `s3cmd` cli tool, or a same `get`, `put` and `ls` interfafce cli tool.
+The [s3cmd](https://github.com/s3tools/s3cmd) cli tool, or a same `get`, `put` and `ls` interfafce cli tool.
 
 ## Installation
 
