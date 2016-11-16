@@ -23,6 +23,15 @@ This executes `s3cmd ls s3://BUCKET/OBJECT/`, and shows the result as a quickfix
 
 The [s3cmd](https://github.com/s3tools/s3cmd) cli tool, or a same `get`, `put` and `ls` interfafce cli tool.
 
+## Option
+
+If you don't use s3cmd, then you can add below line to your .vimrc.
+
+```markdown
+let g:storage_vim_cmd = 'command_name'
+# default 'command_name' is 's3cmd'
+```
+
 ## Installation
 
 Use your favorite plugin manager, or
