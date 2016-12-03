@@ -25,7 +25,7 @@ The [s3cmd](https://github.com/s3tools/s3cmd) cli tool, or a same `get`, `put` a
 
 ## Option
 
-If you don't use s3cmd, then you can add below line to your .vimrc.
+If you have your favorite cli tool which provides the same interface as s3cmd, then you can add below line to your .vimrc.
 
 ```markdown
 let g:storage_vim_cmd = 'command_name'
@@ -50,6 +50,10 @@ set runtimepath^=~/.vim/bundle/storage.vim
 # at Vim
 :helptags ~/.vim/bundle/storage.vim/doc
 ```
+
+## Development
+
+This repository's [spec](https://github.com/blp1526/storage.vim/tree/master/spec) directory has test code. If you want to run test code, open spec file, and exec `source %`.
 
 ## Contributing
 
