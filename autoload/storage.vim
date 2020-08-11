@@ -4,6 +4,8 @@ function! storage#read(cmd, path, dict) abort
       if (!has_key(a:dict, a:path))
         let tempfile  = tempname() . '.' . storage#current_file_extension()
         let a:dict[a:path] = tempfile
+      else
+        let tempfile = a:dict[a:path]
       endif
       call storage#get_cmd(a:cmd, a:path, tempfile)
       silent execute 'edit' fnameescape(tempfile)
@@ -101,7 +103,7 @@ function! storage#cmd_script(...) abort
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
-  let script = storage#cmd_script(a:cmd, 'get', a:bucket, a:file)
+  let script = storage#cmd_script(a:cmd, 'get --force', a:bucket, a:file)
   return storage#run_cmd(script)
 endfunction
 
