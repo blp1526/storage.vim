@@ -33,13 +33,14 @@ function! Spec_storage_read() abort
   let storage_cmd = 's3cmd'
   let file_path = 's3://some-bucket/some-file'
 
+  echo repeat(' ', 2) . 'when called twice for the same file'
   try
     call storage#read(storage_cmd, file_path, storage_dict)
     call storage#read(storage_cmd, file_path, storage_dict)
   catch
     call assert_true(v:exception)
   endtry
-  echo repeat(' ', 2) . 'should not throw an error'
+  echo repeat(' ', 4) . 'should not throw an error'
 
   silent exe 'edit' current_buffer
   silent exe 'bd!' file_path
