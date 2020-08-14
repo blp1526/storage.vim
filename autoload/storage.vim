@@ -1,7 +1,7 @@
 function! storage#read(cmd, path, dict) abort
   if (storage#last_string(a:path) !=? '/')
     if (!has_key(a:dict, a:path))
-      let tempfile  = tempname() . '.' . storage#current_file_extension()
+      let tempfile  = tempname()
       let a:dict[a:path] = tempfile
     else
       let tempfile = a:dict[a:path]
