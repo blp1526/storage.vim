@@ -35,9 +35,7 @@ function! storage#write(cmd, dict, path) abort
   silent execute 'normal ggdd'
   silent execute 'write'
   setlocal nobuflisted
-
   echo storage#put_cmd(a:cmd, tempfile, a:path)
-
   silent execute 'edit' fnameescape(a:path)
   setlocal nomodified
   let &hidden = current_hidden
