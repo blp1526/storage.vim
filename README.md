@@ -21,7 +21,9 @@ This executes `s3cmd ls s3://BUCKET/OBJECT/`, and shows the result as a quickfix
 
 ## Requirement
 
-The [s3cmd](https://github.com/s3tools/s3cmd) cli tool, or a same `get`, `put` and `ls` interfafce cli tool.
+The [s3cmd](https://github.com/s3tools/s3cmd) cli tool, or a same `get --force`
+(overwrites the local file if it already exists), `put` and `ls` interfafce cli
+tool.
 
 ## Option
 
@@ -53,7 +55,10 @@ set runtimepath^=~/.vim/bundle/storage.vim
 
 ## Development
 
-This repository's [spec](https://github.com/blp1526/storage.vim/tree/master/spec) directory has test code. If you want to run test code, open spec file, and exec `source %`.
+This repository's
+[spec](https://github.com/blp1526/storage.vim/tree/master/spec) directory has
+test code. If you want to run test code, open spec file with
+`vim --clean spec/storage_spec.vim`, and exec `source %`.
 
 ## Contributing
 
