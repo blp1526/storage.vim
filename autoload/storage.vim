@@ -14,6 +14,7 @@ function! storage#read(cmd, path, dict) abort
     silent execute 'put'
     silent execute 'normal ggdd'
     silent execute 'filetype detect'
+    setlocal nomodified
   else
     setlocal nomodified
     let ls_result = storage#ls_cmd(a:cmd, a:path)

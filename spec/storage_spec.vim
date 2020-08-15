@@ -23,14 +23,11 @@ endfunction
 
 call Mock_function('storage#get_cmd', funcref('Get_stub'))
 
-" This testing function does not work at first time the script is sourced. The
-" reason is explained in this link:
-" https://stackoverflow.com/a/22633702/747872
 function! Spec_storage_read() abort
   echo 'storage#read()'
   let current_buffer = @%
   let storage_dict = {}
-  let storage_cmd = 's3cmd'
+  let storage_cmd = 'whatever'
   let file_path = 's3://some-bucket/some-file'
 
   echo repeat(' ', 2) . 'when called twice for the same file'
