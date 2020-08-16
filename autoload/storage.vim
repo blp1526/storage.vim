@@ -1,25 +1,25 @@
 function! storage#read(cmd, path, dict) abort
-  try
-    if (storage#last_string(a:path) !=? '/')
-      if (!has_key(a:dict, a:path))
-        let tempfile  = tempname() . '.' . storage#current_file_extension()
-        let a:dict[a:path] = tempfile
-      endif
-      call storage#get_cmd(a:cmd, a:path, tempfile)
-      silent execute 'edit' fnameescape(tempfile)
-      silent execute '%yank'
-      setlocal nobuflisted
-      silent execute 'edit' fnameescape(a:path)
-      silent execute 'put'
-      silent execute 'normal ggdd'
-      silent execute 'filetype detect'
+  if (storage#last_string(a:path) !=? '/')
+    if (!has_key(a:dict, a:path))
+      let tempfile  = tempname()
+      let a:dict[a:path] = tempfile
     else
-      setlocal nomodified
-      let ls_result = storage#ls_cmd(a:cmd, a:path)
-      call storage#open_quickfix(ls_result)
+      let tempfile = a:dict[a:path]
     endif
-  catch
-  endtry
+    call storage#get_cmd(a:cmd, a:path, tempfile)
+    silent execute 'edit' fnameescape(tempfile)
+    silent execute '%yank'
+    setlocal nobuflisted
+    silent execute 'edit' fnameescape(a:path)
+    silent execute 'put'
+    silent execute 'normal ggdd'
+    silent execute 'filetype detect'
+    setlocal nomodified
+  else
+    setlocal nomodified
+    let ls_result = storage#ls_cmd(a:cmd, a:path)
+    call storage#open_quickfix(ls_result)
+  endif
 endfunction
 
 function! storage#write(cmd, dict, path) abort
@@ -35,14 +35,8 @@ function! storage#write(cmd, dict, path) abort
   silent execute 'normal ggdd'
   silent execute 'write'
   setlocal nobuflisted
-  try
-    echo storage#put_cmd(a:cmd, tempfile, a:path)
-  catch
-  finally
-    silent execute 'edit' fnameescape(a:path)
-  endtry
-  " NOTE:
-  " Expected to be still 'modified' if storage#put_cmd failed
+  echo storage#put_cmd(a:cmd, tempfile, a:path)
+  silent execute 'edit' fnameescape(a:path)
   setlocal nomodified
   let &hidden = current_hidden
 endfunction
@@ -101,7 +95,7 @@ function! storage#cmd_script(...) abort
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
-  let script = storage#cmd_script(a:cmd, 'get', a:bucket, a:file)
+  let script = storage#cmd_script(a:cmd, 'get --force', a:bucket, a:file)
   return storage#run_cmd(script)
 endfunction
 
@@ -121,8 +115,7 @@ function! storage#run_cmd(script) abort
   if v:shell_error == 0
     return result
   else
-    echo result
-    throw 'Bad Exit Status Error'
+    throw 'Bad Exit Status Error => ' . trim(result)
   endif
 endfunction
 

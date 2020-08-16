@@ -2,6 +2,48 @@ source $PWD/autoload/storage.vim
 
 let v:errors = []
 
+" Redefines a function whose name is 'a:name' using 'a:stub'.
+function! Mock_function(name, stub) abort
+  let l:text =<< trim EOF
+    function! %s(...) abort closure
+      return call(a:stub, a:000)
+    endfunction
+  EOF
+  execute printf(join(l:text, "\n"), a:name)
+endfunction
+
+function! Get_stub(cmd, path, tempfile) abort
+  silent execute 'edit' fnameescape(a:tempfile)
+  " Delete the file content.
+  silent execute 'normal! ggdG'
+  silent execute 'normal! a' . 'bla bla' . "\<Esc>"
+  silent execute 'write'
+  setlocal nobuflisted
+endfunction
+
+call Mock_function('storage#get_cmd', funcref('Get_stub'))
+
+function! Spec_storage_read() abort
+  echo 'storage#read()'
+  let current_buffer = @%
+  let storage_dict = {}
+  let storage_cmd = 'whatever'
+  let file_path = 's3://some-bucket/some-file'
+
+  echo repeat(' ', 2) . 'when called twice for the same file'
+  try
+    call storage#read(storage_cmd, file_path, storage_dict)
+    call storage#read(storage_cmd, file_path, storage_dict)
+  catch
+    call assert_true(v:exception)
+  endtry
+  echo repeat(' ', 4) . 'should not throw an error'
+
+  silent exe 'edit' current_buffer
+  silent exe 'bd!' file_path
+  echo "\n"
+endfunction
+
 function! Spec_storage_current_file_extension() abort
   echo 'storage#current_file_extension()'
   echo repeat(' ', 2).'when current file is "storage_spec.vim"'
@@ -48,6 +90,7 @@ function! Spec_storage_errorformatted_string() abort
   echo "\n"
 endfunction
 
+call Spec_storage_read()
 call Spec_storage_current_file_extension()
 call Spec_storage_cmd_script()
 call Spec_storage_last_string()
