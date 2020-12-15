@@ -18,7 +18,7 @@ function! storage#read(cmd, path, dict) abort
   else
     setlocal nomodified
     let ls_result = storage#ls_cmd(a:cmd, a:path)
-    call storage#open_quickfix(ls_result)
+    call storage#open_quickfix(ls_result, a:path)
   endif
 endfunction
 
@@ -41,14 +41,19 @@ function! storage#write(cmd, dict, path) abort
   let &hidden = current_hidden
 endfunction
 
-function! storage#open_quickfix(ls_result) abort
+function! storage#open_quickfix(ls_result, path) abort
   let current_errorformat = &errorformat
   let &errorformat = storage#errorformat()
   let ls_result_array = split(a:ls_result, "\n")
-  call map(ls_result_array, 'storage#errorformatted_string(v:val)')
-  let storage_vim_ls_list = join(ls_result_array, "\n")
-  " FIXME: more beautify
-  cgetexpr storage_vim_ls_list
+  let file_array = []
+  for index in range(len(ls_result_array))
+    if storage#last_string(ls_result_array[index]) != "/"
+      call add(file_array, ls_result_array[index])
+    endif
+  endfor
+  call map(file_array, 'storage#errorformatted_string(v:val, ' . "'" . a:path . "'" .')')
+  let storage_vim_ls = join(file_array, "\n")
+  cgetexpr storage_vim_ls
   copen
   try
     " NOTE:
@@ -78,12 +83,16 @@ function! storage#errorformat() abort
   return '%f(%l\,%c):%m'
 endfunction
 
-function! storage#errorformatted_string(val) abort
+function! storage#errorformatted_string(val, path) abort
   let array = split(a:val)
-  let file        = array[(len(array) - 1)]
+  let filepath    = array[3]
   let line_column = '(1,1):'
-  let message     = array[(len(array) - 2)]
-  return (file . line_column . message)
+  let message     = array[0] . ' ' . array[1] . ' ' .array[2]
+  if g:storage_vim_cmd == 'aws s3'
+    let backet = 's3://' . split(a:path, '/')[2] . '/'
+    let filepath = backet . filepath
+  endif
+  return (filepath . line_column . message)
 endfunction
 
 function! storage#current_line_string() abort
@@ -95,23 +104,34 @@ function! storage#cmd_script(...) abort
 endfunction
 
 function! storage#get_cmd(cmd, bucket, file) abort
-  let script = storage#cmd_script(a:cmd, 'get --force', a:bucket, a:file)
-  return storage#run_cmd(script)
+  if g:storage_vim_cmd == 'aws s3'
+    let script = storage#cmd_script(a:cmd, 'cp', a:bucket, a:file)
+  else
+    let script = storage#cmd_script(a:cmd, 'get --force', a:bucket, a:file)
+  endif
+  let result = system(script)
+  if v:shell_error != 0
+    echo trim(result)
+  endif
 endfunction
 
 function! storage#put_cmd(cmd, file, bucket) abort
-  let script = storage#cmd_script(a:cmd, 'put', a:file, a:bucket)
+  if g:storage_vim_cmd == 'aws s3'
+    let script = storage#cmd_script(a:cmd, 'cp', a:file, a:bucket)
+  else
+    let script = storage#cmd_script(a:cmd, 'put', a:file, a:bucket)
+  endif
   call storage#run_cmd(script)
   return '"' . a:bucket . '" ' . 'uploaded'
 endfunction
 
 function! storage#ls_cmd(cmd, bucket) abort
-  let script = storage#cmd_script(a:cmd, 'ls', a:bucket)
+  let script = storage#cmd_script(a:cmd, 'ls --recursive', a:bucket)
   return storage#run_cmd(script)
 endfunction
 
 function! storage#run_cmd(script) abort
-  let result =  system(a:script)
+  let result = system(a:script)
   if v:shell_error == 0
     return result
   else

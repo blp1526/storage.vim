@@ -1,38 +1,33 @@
 # storage.vim
 
+<img alt="storage.vim" src="https://user-images.githubusercontent.com/1040576/102196982-eb4bd780-3f03-11eb-91b9-2e16ad045ed0.jpg" width="640px">
+
 ## Usage
-
-```markdown
-$ vim s3://BUCKET/OBJECT
-```
-
-This executes `s3cmd get s3://BUCKET/OBJECT tempfile`, and shows the result as a new buffer.<br>
-If you `:w[rite]`, then `s3cmd put tempfile s3://BUCKET/OBJECT` is executed.
 
 ```markdown
 $ vim s3://BUCKET/OBJECT/
 ```
 
-This executes `s3cmd ls s3://BUCKET/OBJECT/`, and shows the result as a quickfix window.
+This executes `s3cmd ls --recursive s3://BUCKET/OBJECT/` or `aws s3 ls --recursive s3://BUCKET/OBJECT/`, and shows the result as a quickfix window.
 
-## Screenshot
+```markdown
+$ vim s3://BUCKET/OBJECT
+```
 
-![s3cmd](https://cloud.githubusercontent.com/assets/1040576/20217208/1544c4b2-a862-11e6-90c6-91d4c3629c0e.png)
+This executes `s3cmd get --force s3://BUCKET/OBJECT tempfile` or `aws s3 cp s3://BUCKET/OBJECT tempfile`, and shows the result as a new buffer.<br>
+If you `:w[rite]`, then `s3cmd put tempfile s3://BUCKET/OBJECT` or `aws s3 cp tempfile s3://BUCKET/OBJECT` is executed.
 
 ## Requirement
 
-The [s3cmd](https://github.com/s3tools/s3cmd) cli tool, or a same `get --force`
-(overwrites the local file if it already exists), `put` and `ls` interfafce cli
-tool.
+[s3cmd](https://github.com/s3tools/s3cmd) or [aws-cli](https://github.com/aws/aws-cli)
 
 ## Option
 
-If you have your favorite cli tool which provides the same interface as s3cmd, then you can add below line to your .vimrc.
-
 ```markdown
-let g:storage_vim_cmd = 'command_name'
-# default 'command_name' is 's3cmd'
+let g:storage_vim_cmd = 'aws s3'
 ```
+
+Default g:storage_vim_cmd is s3cmd.
 
 ## Installation
 

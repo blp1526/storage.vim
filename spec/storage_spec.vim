@@ -1,4 +1,5 @@
 source $PWD/autoload/storage.vim
+source $PWD/plugin/storage.vim
 
 let v:errors = []
 
@@ -82,9 +83,9 @@ function! Spec_storage_errorformat() abort
 endfunction
 
 function! Spec_storage_errorformatted_string() abort
-  echo 'storage#errorformatted_string(val)'
-  let expected = 's3://foo/bar.md(1,1):12324'
-  let actual = storage#errorformatted_string('2016-10-31 00:00 12324 s3://foo/bar.md')
+  echo 'storage#errorformatted_string(val, path)'
+  let expected = 's3://foo/bar.md(1,1):2016-10-31 00:00 12324'
+  let actual = storage#errorformatted_string('2016-10-31 00:00 12324 s3://foo/bar.md', '')
   echo repeat(' ', 2).'should return storage#errorformat() style string'
   call assert_equal(expected, actual)
   echo "\n"
